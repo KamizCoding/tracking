@@ -1,3 +1,9 @@
+databases:
+  - name: vellix-db
+    databaseName: vellix_tracking
+    user: vellix_user
+    plan: free
+
 services:
   - type: web
     name: vellix-tracking
@@ -42,9 +48,3 @@ services:
         value: file
       - key: QUEUE_CONNECTION
         value: sync
-
-databases:
-  - name: vellix-db
-    databaseName: vellix_tracking
-    user: vellix_user
-    plan: free
