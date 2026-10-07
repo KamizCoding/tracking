@@ -2,7 +2,7 @@
 
 # Create .env file with environment variables (use printf for better handling of special chars)
 printf "APP_ENV=%s\n" "${APP_ENV:-production}" > /var/www/html/.env
-printf "APP_DEBUG=%s\n" "${APP_DEBUG:-false}" >> /var/www/html/.env
+printf "APP_DEBUG=%s\n" "${APP_DEBUG:-true}" >> /var/www/html/.env
 printf "APP_URL=%s\n" "${APP_URL:-https://vellix-tracking.onrender.com}" >> /var/www/html/.env
 printf "APP_KEY=%s\n" "${APP_KEY}" >> /var/www/html/.env
 printf "DB_CONNECTION=%s\n" "${DB_CONNECTION:-pgsql}" >> /var/www/html/.env
@@ -49,10 +49,8 @@ php artisan view:clear
 # Run migrations
 php artisan migrate --force
 
-# Cache config
+# Cache config only (skip route and view cache for debugging)
 php artisan config:cache
-php artisan route:cache
-php artisan view:cache
 
 # Start supervisor
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
