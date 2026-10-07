@@ -2,7 +2,7 @@
 
 # Create .env file with environment variables (use printf for better handling of special chars)
 printf "APP_ENV=%s\n" "${APP_ENV:-production}" > /var/www/html/.env
-printf "APP_DEBUG=%s\n" "${APP_DEBUG:-true}" >> /var/www/html/.env
+printf "APP_DEBUG=%s\n" "${APP_DEBUG:-false}" >> /var/www/html/.env
 if [ -n "$APP_URL" ]; then
     printf "APP_URL=%s\n" "$APP_URL" >> /var/www/html/.env
 fi
@@ -50,8 +50,10 @@ php artisan view:clear
 # Run migrations
 php artisan migrate --force
 
-# Cache config only (skip route and view cache for debugging)
+# Cache config
 php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 
 # Start supervisor
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
