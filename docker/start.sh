@@ -16,6 +16,15 @@ printf "CACHE_DRIVER=%s\n" "${CACHE_DRIVER:-file}" >> /var/www/html/.env
 printf "SESSION_DRIVER=%s\n" "${SESSION_DRIVER:-file}" >> /var/www/html/.env
 printf "QUEUE_CONNECTION=%s\n" "${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env
 
+# Download GeoLite2 database if not present
+if [ ! -f /var/www/html/database/GeoLite2-City.mmdb ]; then
+    echo "Downloading GeoLite2 database..."
+    mkdir -p /var/www/html/database
+    curl -L -o /var/www/html/database/GeoLite2-City.mmdb.tgz "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb.gz"
+    gunzip -f /var/www/html/database/GeoLite2-City.mmdb.tgz || true
+    mv /var/www/html/database/GeoLite2-City.mmdb /var/www/html/database/GeoLite2-City.mmdb 2>/dev/null || true
+fi
+
 # Create storage directories if they don't exist
 mkdir -p /var/www/html/storage/framework/cache
 mkdir -p /var/www/html/storage/framework/sessions
