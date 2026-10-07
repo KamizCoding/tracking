@@ -26,8 +26,15 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . /var/www/html
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
+
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Build frontend assets
+RUN npm install && npm run build
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
