@@ -2,7 +2,8 @@
 
 # Create .env file with environment variables (use printf for better handling of special chars)
 printf "APP_ENV=%s\n" "${APP_ENV:-production}" > /var/www/html/.env
-printf "APP_DEBUG=%s\n" "${APP_DEBUG:-false}" >> /var/www/html/.env
+printf "APP_DEBUG=%s\n" "${APP_DEBUG:-true}" >> /var/www/html/.env
+printf "LOG_LEVEL=%s\n" "${LOG_LEVEL:-debug}" >> /var/www/html/.env
 printf "APP_URL=%s\n" "${APP_URL:-https://vellix-tracking.onrender.com}" >> /var/www/html/.env
 printf "APP_KEY=%s\n" "${APP_KEY}" >> /var/www/html/.env
 printf "DB_CONNECTION=%s\n" "${DB_CONNECTION:-pgsql}" >> /var/www/html/.env
