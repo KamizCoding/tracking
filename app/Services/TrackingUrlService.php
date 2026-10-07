@@ -42,14 +42,7 @@ class TrackingUrlService
         $prefix = $trackingLink->slug ? 'c/' : 's/';
 
         if (! $domain) {
-            if (app()->environment('production')) {
-                throw new \RuntimeException(
-                    'TRACKING_DOMAIN must be configured in production. '
-                    .'Set TRACKING_DOMAIN in your .env file.'
-                );
-            }
-
-            // Fallback to current request host for local development
+            // Fallback to current request host (works on Render automatically)
             $baseUrl = Request::getSchemeAndHttpHost();
 
             return "{$baseUrl}/{$prefix}{$identifier}";
