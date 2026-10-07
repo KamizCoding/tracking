@@ -42,6 +42,8 @@ class TrackingController extends Controller
             if (str_starts_with($request->path(), '/c/')) {
                 // Custom slug format: extract slug from /c/slug
                 $code = ltrim(str_replace('c/', '', $request->path()), '/');
+                // URL decode to match what's stored in database
+                $code = urldecode($code);
             } elseif (str_starts_with($request->path(), '/track/')) {
                 // Legacy format: extract code from /track/{code}
                 $code = ltrim(str_replace('track/', '', $request->path()), '/');
