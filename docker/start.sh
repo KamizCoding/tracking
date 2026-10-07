@@ -49,10 +49,8 @@ php artisan view:clear
 # Run migrations
 php artisan migrate --force
 
-# Cache config
+# Cache config only (skip route and view cache for debugging)
 php artisan config:cache
-php artisan route:cache
-php artisan view:cache
 
 # Start supervisor
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
