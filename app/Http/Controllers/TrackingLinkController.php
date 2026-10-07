@@ -108,8 +108,10 @@ class TrackingLinkController extends Controller
             $parsedUrl = parse_url($urlResult['normalized']);
             if (isset($parsedUrl['path']) && $parsedUrl['path'] !== '/') {
                 $slug = ltrim($parsedUrl['path'], '/');
-                // Remove query string if present
-                $slug = explode('?', $slug)[0];
+                // Include query string if present
+                if (isset($parsedUrl['query']) && $parsedUrl['query']) {
+                    $slug .= '?'.$parsedUrl['query'];
+                }
             }
         }
 

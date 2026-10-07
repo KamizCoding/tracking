@@ -3,7 +3,9 @@
 # Create .env file with environment variables (use printf for better handling of special chars)
 printf "APP_ENV=%s\n" "${APP_ENV:-production}" > /var/www/html/.env
 printf "APP_DEBUG=%s\n" "${APP_DEBUG:-true}" >> /var/www/html/.env
-printf "APP_URL=%s\n" "${APP_URL:-https://vellix-tracking.onrender.com}" >> /var/www/html/.env
+if [ -n "$APP_URL" ]; then
+    printf "APP_URL=%s\n" "$APP_URL" >> /var/www/html/.env
+fi
 printf "APP_KEY=%s\n" "${APP_KEY}" >> /var/www/html/.env
 printf "DB_CONNECTION=%s\n" "${DB_CONNECTION:-pgsql}" >> /var/www/html/.env
 printf "DB_HOST=%s\n" "${DB_HOST}" >> /var/www/html/.env
@@ -11,7 +13,6 @@ printf "DB_PORT=%s\n" "${DB_PORT:-5432}" >> /var/www/html/.env
 printf "DB_DATABASE=%s\n" "${DB_DATABASE}" >> /var/www/html/.env
 printf "DB_USERNAME=%s\n" "${DB_USERNAME}" >> /var/www/html/.env
 printf "DB_PASSWORD=%s\n" "${DB_PASSWORD}" >> /var/www/html/.env
-printf "TRACKING_DOMAIN=%s\n" "${TRACKING_DOMAIN:-vellix-tracking.onrender.com}" >> /var/www/html/.env
 printf "CACHE_DRIVER=%s\n" "${CACHE_DRIVER:-file}" >> /var/www/html/.env
 printf "SESSION_DRIVER=%s\n" "${SESSION_DRIVER:-file}" >> /var/www/html/.env
 printf "QUEUE_CONNECTION=%s\n" "${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env
