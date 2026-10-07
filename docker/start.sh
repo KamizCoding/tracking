@@ -20,9 +20,9 @@ printf "QUEUE_CONNECTION=%s\n" "${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env
 if [ ! -f /var/www/html/database/GeoLite2-City.mmdb ]; then
     echo "Downloading GeoLite2 database..."
     mkdir -p /var/www/html/database
-    curl -L -o /var/www/html/database/GeoLite2-City.mmdb.tgz "https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb.gz"
-    gunzip -f /var/www/html/database/GeoLite2-City.mmdb.tgz || true
-    mv /var/www/html/database/GeoLite2-City.mmdb /var/www/html/database/GeoLite2-City.mmdb 2>/dev/null || true
+    curl -L -o /var/www/html/database/GeoLite2-City.mmdb.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=G4l8qK2ZxHq7J3xW&suffix=tar.gz"
+    tar -xzf /var/www/html/database/GeoLite2-City.mmdb.gz -C /var/www/html/database --strip-components=1
+    rm /var/www/html/database/GeoLite2-City.mmdb.gz
 fi
 
 # Create storage directories if they don't exist
