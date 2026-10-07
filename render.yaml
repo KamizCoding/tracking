@@ -8,6 +8,10 @@ services:
         value: production
       - key: APP_KEY
         generateValue: true
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://vellix-tracking.onrender.com
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
@@ -32,6 +36,12 @@ services:
           property: password
       - key: TRACKING_DOMAIN
         value: vellix-tracking.onrender.com
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: database
 
 databases:
   - name: vellix-db
