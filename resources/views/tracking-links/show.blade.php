@@ -33,15 +33,12 @@
                             <label class="block text-sm font-medium text-gray-700 mb-2">Shareable Link</label>
                             <div class="flex items-center gap-2">
                                 <input type="text" value="{{ $trackingLink->tracking_url }}" readonly
-                                    class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm font-mono text-xs">
+                                    class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm">
                                 <button onclick="copyToClipboard('{{ $trackingLink->tracking_url }}')"
                                     class="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-700 transition text-sm">
                                     Copy
                                 </button>
                             </div>
-                            <p class="mt-1 text-xs text-gray-500">
-                                Slug length: {{ strlen($trackingLink->slug ?? '') }} characters
-                            </p>
                         </div>
 
                         <!-- Destination URL with Code -->
