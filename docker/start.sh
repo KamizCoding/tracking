@@ -1,25 +1,22 @@
 #!/bin/bash
 
-# Create .env file if it doesn't exist
-if [ ! -f /var/www/html/.env ]; then
-    touch /var/www/html/.env
-fi
-
-# Write environment variables to .env file
-echo "APP_ENV=${APP_ENV:-production}" >> /var/www/html/.env
-echo "APP_DEBUG=${APP_DEBUG:-false}" >> /var/www/html/.env
-echo "APP_URL=${APP_URL:-https://vellix-tracking.onrender.com}" >> /var/www/html/.env
-echo "APP_KEY=${APP_KEY}" >> /var/www/html/.env
-echo "DB_CONNECTION=${DB_CONNECTION:-pgsql}" >> /var/www/html/.env
-echo "DB_HOST=${DB_HOST}" >> /var/www/html/.env
-echo "DB_PORT=${DB_PORT:-5432}" >> /var/www/html/.env
-echo "DB_DATABASE=${DB_DATABASE}" >> /var/www/html/.env
-echo "DB_USERNAME=${DB_USERNAME}" >> /var/www/html/.env
-echo "DB_PASSWORD=${DB_PASSWORD}" >> /var/www/html/.env
-echo "TRACKING_DOMAIN=${TRACKING_DOMAIN:-vellix-tracking.onrender.com}" >> /var/www/html/.env
-echo "CACHE_DRIVER=${CACHE_DRIVER:-file}" >> /var/www/html/.env
-echo "SESSION_DRIVER=${SESSION_DRIVER:-file}" >> /var/www/html/.env
-echo "QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env
+# Create .env file with environment variables
+cat > /var/www/html/.env <<EOF
+APP_ENV=${APP_ENV:-production}
+APP_DEBUG=${APP_DEBUG:-false}
+APP_URL=${APP_URL:-https://vellix-tracking.onrender.com}
+APP_KEY=${APP_KEY}
+DB_CONNECTION=${DB_CONNECTION:-pgsql}
+DB_HOST=${DB_HOST}
+DB_PORT=${DB_PORT:-5432}
+DB_DATABASE=${DB_DATABASE}
+DB_USERNAME=${DB_USERNAME}
+DB_PASSWORD=${DB_PASSWORD}
+TRACKING_DOMAIN=${TRACKING_DOMAIN:-vellix-tracking.onrender.com}
+CACHE_DRIVER=${CACHE_DRIVER:-file}
+SESSION_DRIVER=${SESSION_DRIVER:-file}
+QUEUE_CONNECTION=${QUEUE_CONNECTION:-sync}
+EOF
 
 # Create storage directories if they don't exist
 mkdir -p /var/www/html/storage/framework/cache
