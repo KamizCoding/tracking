@@ -6,6 +6,8 @@ services:
     envVars:
       - key: APP_ENV
         value: production
+      - key: APP_KEY
+        generateValue: true
       - key: APP_DEBUG
         value: false
       - key: APP_URL
@@ -39,7 +41,7 @@ services:
       - key: SESSION_DRIVER
         value: file
       - key: QUEUE_CONNECTION
-        value: database
+        value: sync
 
 databases:
   - name: vellix-db
