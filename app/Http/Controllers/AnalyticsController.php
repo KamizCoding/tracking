@@ -172,6 +172,10 @@ class AnalyticsController extends Controller
     public function trackingLink(TrackingLink $trackingLink, Request $request)
     {
         try {
+            if (! Auth::check()) {
+                abort(401, 'You must be logged in to view analytics.');
+            }
+
             $this->authorize('view', $trackingLink);
 
             $user = Auth::user();
