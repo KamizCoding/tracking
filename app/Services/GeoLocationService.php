@@ -14,7 +14,7 @@ class GeoLocationService
     {
         $databasePath = database_path('GeoLite2-City.mmdb');
 
-        if (file_exists($databasePath)) {
+        if (file_exists($databasePath) && filesize($databasePath) > 1000) {
             try {
                 $this->reader = new Reader($databasePath);
             } catch (\Exception $e) {

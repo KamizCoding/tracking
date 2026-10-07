@@ -16,13 +16,13 @@ printf "CACHE_DRIVER=%s\n" "${CACHE_DRIVER:-file}" >> /var/www/html/.env
 printf "SESSION_DRIVER=%s\n" "${SESSION_DRIVER:-file}" >> /var/www/html/.env
 printf "QUEUE_CONNECTION=%s\n" "${QUEUE_CONNECTION:-sync}" >> /var/www/html/.env
 
-# Download GeoLite2 database if not present
+# Download GeoLite2 database if not present (optional - for GeoIP)
+# GeoIP is optional - app will work without it
 if [ ! -f /var/www/html/database/GeoLite2-City.mmdb ]; then
-    echo "Downloading GeoLite2 database..."
+    echo "GeoLite2 database not found. GeoIP will use IP fallback."
     mkdir -p /var/www/html/database
-    curl -L -o /var/www/html/database/GeoLite2-City.mmdb.gz "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=G4l8qK2ZxHq7J3xW&suffix=tar.gz"
-    tar -xzf /var/www/html/database/GeoLite2-City.mmdb.gz -C /var/www/html/database --strip-components=1
-    rm /var/www/html/database/GeoLite2-City.mmdb.gz
+    # Create empty file to prevent errors
+    touch /var/www/html/database/GeoLite2-City.mmdb
 fi
 
 # Create storage directories if they don't exist
