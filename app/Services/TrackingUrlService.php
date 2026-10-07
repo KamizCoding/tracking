@@ -26,8 +26,10 @@ class TrackingUrlService
     protected function generateCustomDomainUrl(TrackingLink $trackingLink): string
     {
         $domain = $trackingLink->linkDomain->domain;
+        $identifier = $trackingLink->slug ?? $trackingLink->code;
+        $prefix = $trackingLink->slug ? 'c/' : 's/';
 
-        return "https://{$domain}/s/{$trackingLink->code}";
+        return "https://{$domain}/{$prefix}{$identifier}";
     }
 
     /**
@@ -36,6 +38,8 @@ class TrackingUrlService
     protected function generateDefaultUrl(TrackingLink $trackingLink): string
     {
         $domain = config('tracking.domain');
+        $identifier = $trackingLink->slug ?? $trackingLink->code;
+        $prefix = $trackingLink->slug ? 'c/' : 's/';
 
         if (! $domain) {
             if (app()->environment('production')) {
@@ -48,10 +52,10 @@ class TrackingUrlService
             // Fallback to current request host for local development
             $baseUrl = Request::getSchemeAndHttpHost();
 
-            return "{$baseUrl}/s/{$trackingLink->code}";
+            return "{$baseUrl}/{$prefix}{$identifier}";
         }
 
-        return "https://{$domain}/s/{$trackingLink->code}";
+        return "https://{$domain}/{$prefix}{$identifier}";
     }
 
     /**

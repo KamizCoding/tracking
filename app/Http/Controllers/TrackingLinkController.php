@@ -66,6 +66,7 @@ class TrackingLinkController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'destination_url' => 'required|string|max:2048',
+            'slug' => 'nullable|string|max:2048|unique:tracking_links,slug',
             'campaign_id' => 'nullable|exists:campaigns,id',
             'link_domain_id' => 'nullable|exists:link_domains,id',
             'expires_at' => 'nullable|date|after:now',
@@ -101,11 +102,23 @@ class TrackingLinkController extends Controller
 
         $code = $this->trackingCodeService->generateUniqueCode();
 
+        // Use custom slug if provided, otherwise generate from destination URL path
+        $slug = $validated['slug'] ?? null;
+        if (! $slug) {
+            $parsedUrl = parse_url($urlResult['normalized']);
+            if (isset($parsedUrl['path']) && $parsedUrl['path'] !== '/') {
+                $slug = ltrim($parsedUrl['path'], '/');
+                // Remove query string if present
+                $slug = explode('?', $slug)[0];
+            }
+        }
+
         $trackingLink = TrackingLink::create([
             'user_id' => Auth::id(),
             'campaign_id' => $validated['campaign_id'] ?? null,
             'link_domain_id' => $validated['link_domain_id'] ?? null,
             'code' => $code,
+            'slug' => $slug,
             'name' => $validated['name'],
             'destination_url' => $urlResult['normalized'],
             'expires_at' => $validated['expires_at'] ?? null,

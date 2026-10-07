@@ -30,14 +30,19 @@ class TrackingController extends Controller
                 abort(404, 'Tracking code not found');
             }
 
-            // Find tracking link by code assigned to this specific custom domain
-            $trackingLink = TrackingLink::where('code', $code)
+            // Find tracking link by slug or code assigned to this specific custom domain
+            $trackingLink = TrackingLink::where(function ($query) use ($code) {
+                $query->where('slug', $code)->orWhere('code', $code);
+            })
                 ->where('link_domain_id', $customDomain->id)
                 ->first();
         } else {
             // Default routing: code could be in path or parameter
-            // Check if it's the legacy /track/{code} format
-            if (str_starts_with($request->path(), '/track/')) {
+            // Check if it's the custom slug format /c/slug
+            if (str_starts_with($request->path(), '/c/')) {
+                // Custom slug format: extract slug from /c/slug
+                $code = ltrim(str_replace('c/', '', $request->path()), '/');
+            } elseif (str_starts_with($request->path(), '/track/')) {
                 // Legacy format: extract code from /track/{code}
                 $code = ltrim(str_replace('track/', '', $request->path()), '/');
             } elseif (str_starts_with($request->path(), '/s/')) {
@@ -52,7 +57,10 @@ class TrackingController extends Controller
                 abort(404, 'Tracking code not found');
             }
 
-            $trackingLink = TrackingLink::where('code', $code)->first();
+            // Find tracking link by slug or code
+            $trackingLink = TrackingLink::where(function ($query) use ($code) {
+                $query->where('slug', $code)->orWhere('code', $code);
+            })->first();
 
             // If the link is assigned to a custom domain, it cannot be accessed
             // through the default domain (short link or legacy)

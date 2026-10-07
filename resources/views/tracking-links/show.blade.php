@@ -30,11 +30,11 @@
 
                         <!-- Tracking URL -->
                         <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Tracking URL (for users to click)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Shareable Link</label>
                             <div class="flex items-center gap-2">
                                 <input type="text" value="{{ $trackingLink->tracking_url }}" readonly
                                     class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-md text-sm">
-                                <button onclick="copyToClipboard('{{ $trackingLink->tracking_url }}')" 
+                                <button onclick="copyToClipboard('{{ $trackingLink->tracking_url }}')"
                                     class="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-700 transition text-sm">
                                     Copy
                                 </button>

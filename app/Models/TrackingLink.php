@@ -21,6 +21,7 @@ class TrackingLink extends Model
         'campaign_id',
         'link_domain_id',
         'code',
+        'slug',
         'name',
         'destination_url',
         'status',

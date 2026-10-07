@@ -93,20 +93,20 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Tracking redirect routes
-// Short links (less obvious tracking): http://domain.com/ABC123
-// Using /s/ prefix to avoid conflicts with other routes
+// Tracking redirect routes (must be at the end to avoid conflicts)
+// Custom slugs (looks like destination path): http://domain.com/c/products/wallet.html
+Route::get('/c/{slug}', [TrackingController::class, 'redirect'])
+    ->where('slug', '.*')
+    ->middleware('throttle:60,1')
+    ->name('tracking.redirect.slug');
+
+// Short links (less obvious tracking): http://domain.com/s/ABC123
 Route::get('/s/{code}', [TrackingController::class, 'redirect'])
     ->where('code', '[a-zA-Z0-9]+')
     ->middleware('throttle:60,1')
     ->name('tracking.redirect');
 
 // Legacy tracking route (still supported): /track/ABC123
-// For custom domains (e.g., go.customer.com/ABC123):
-// 1. Configure your web server to point the custom domain to this Laravel application
-// 2. Configure web server rewrite: go.customer.com/ABC123 -> /track/ABC123
-// 3. The controller uses the Host header to identify the custom domain
-// 4. The controller enforces link_domain_id isolation
 Route::get('/track/{code}', [TrackingController::class, 'redirect'])
     ->where('code', '[a-zA-Z0-9]+')
     ->middleware('throttle:60,1')
