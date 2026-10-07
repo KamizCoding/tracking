@@ -172,10 +172,6 @@ class AnalyticsController extends Controller
     public function trackingLink(TrackingLink $trackingLink, Request $request)
     {
         try {
-            if (! Auth::check()) {
-                abort(401, 'You must be logged in to view analytics.');
-            }
-
             $this->authorize('view', $trackingLink);
 
             $user = Auth::user();
@@ -202,8 +198,10 @@ class AnalyticsController extends Controller
             // If a specific click is selected, filter to only that click
             if ($selectedClickId) {
                 $clickQuery = $trackingLink->clicks()->where('id', $selectedClickId);
+                $useDateRange = false;
             } else {
                 $clickQuery = $trackingLink->clicks()->whereBetween('clicked_at', [$startDate, $endDate]);
+                $useDateRange = true;
             }
 
             $clickQuery = $clickQuery->where('is_bot', false);
@@ -235,7 +233,11 @@ class AnalyticsController extends Controller
             }
 
             // Get geographic data (excluding bots)
-            $clicksByCountry = (clone $clickQuery)
+            $countryQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $countryQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByCountry = $countryQuery
                 ->whereNotNull('country')
                 ->selectRaw('country, COUNT(*) as count')
                 ->groupBy('country')
@@ -244,7 +246,11 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Get clicks by region (excluding bots)
-            $clicksByRegion = (clone $clickQuery)
+            $regionQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $regionQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByRegion = $regionQuery
                 ->whereNotNull('region')
                 ->selectRaw('region, COUNT(*) as count')
                 ->groupBy('region')
@@ -253,7 +259,11 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Get clicks by city (excluding bots)
-            $clicksByCity = (clone $clickQuery)
+            $cityQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $cityQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByCity = $cityQuery
                 ->whereNotNull('city')
                 ->selectRaw('city, COUNT(*) as count')
                 ->groupBy('city')
@@ -262,13 +272,21 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Get clicks by device type (excluding bots)
-            $clicksByDevice = (clone $clickQuery)
+            $deviceQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $deviceQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByDevice = $deviceQuery
                 ->selectRaw('device_type, COUNT(*) as count')
                 ->groupBy('device_type')
                 ->get();
 
             // Get clicks by browser (excluding bots)
-            $clicksByBrowser = (clone $clickQuery)
+            $browserQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $browserQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByBrowser = $browserQuery
                 ->selectRaw('browser, COUNT(*) as count')
                 ->groupBy('browser')
                 ->orderByDesc('count')
@@ -276,7 +294,11 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Get clicks by OS (excluding bots)
-            $clicksByOS = (clone $clickQuery)
+            $osQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $osQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clicksByOS = $osQuery
                 ->selectRaw('os, COUNT(*) as count')
                 ->groupBy('os')
                 ->orderByDesc('count')
@@ -284,7 +306,11 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Get top referrers (excluding bots)
-            $topReferrers = (clone $clickQuery)
+            $referrerQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $referrerQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $topReferrers = $referrerQuery
                 ->whereNotNull('referrer_host')
                 ->selectRaw('referrer_host, COUNT(*) as count')
                 ->groupBy('referrer_host')
@@ -293,12 +319,20 @@ class AnalyticsController extends Controller
                 ->get();
 
             // Count direct traffic (no referrer)
-            $directTraffic = (clone $clickQuery)
+            $directQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $directQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $directTraffic = $directQuery
                 ->whereNull('referrer')
                 ->count();
 
             // Get location data for map (excluding bots)
-            $clickLocations = (clone $clickQuery)
+            $locationQuery = $trackingLink->clicks()->where('is_bot', false);
+            if ($useDateRange) {
+                $locationQuery->whereBetween('clicked_at', [$startDate, $endDate]);
+            }
+            $clickLocations = $locationQuery
                 ->whereNotNull('latitude')
                 ->whereNotNull('longitude')
                 ->select('latitude', 'longitude', 'country', 'city')
